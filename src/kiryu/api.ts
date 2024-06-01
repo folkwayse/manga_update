@@ -63,7 +63,7 @@ export const getUpdates = async () => {
             updateData.push({slug,chapter_number});
         }
     }
-
+    console.log(updateData);
   return updateData;
 };
 
