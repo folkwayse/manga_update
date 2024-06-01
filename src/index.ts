@@ -9,33 +9,16 @@ dotenv.config();
 const app = new Hono()
 
 app.get('/', async (c) => {
-  const mangas = await getUpdates();
+  // const mangas = await getUpdates();
 
-  // get all slugs 
-  const slugs = mangas.new_chapter.map((manga) => {
-    return manga.slug
-  })
-  console.log(slugs)
-  const mang = await updateStatus(slugs)
-  // for (const manga of mangas.new_chapter) {
-   
-  //   if (manga.slug) {
-  //     const fakomikManga = await getMangaBySlug(manga.slug);
-  //     if(!fakomikManga) {
-  //       continue;
-  //     }
-  //     const kiryuManga = await getChapters(manga.slug);
-  //     //find index of chapter
-  //     const indx = kiryuManga.chapters.findIndex((chapter) => {
-  //       return chapter.slug ===fakomikManga.chapter[0].slug.replace('-bahasa-indonesia','')
-  //     })
-      
-  //     console.log(kiryuManga.chapters[indx-1]);
-  //     await updateStatus(manga.slug);
-      
-  //   }
+  // // get all slugs 
+  // const slugs = mangas.new_chapter.map((manga) => {
+  //   return manga.slug
+  // })
+  const updateData = await getUpdates();
+  // console.log(updateData)
+  const mang = await updateStatus(updateData)
 
-  // }
   return c.json(mang);
 })
 

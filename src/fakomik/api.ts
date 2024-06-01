@@ -18,12 +18,13 @@ export const getMangaBySlug = async (slug: string) => {
   return data;
 };
 
-export const updateStatus = async (slugs: string[]) => {
+export const updateStatus = async (updateData: any[]) => {
+  
   const options = {
     method: "POST",
     url: process.env.API_URL + "mangas/hasupdate" ,
     data: {
-        slugs,
+      updateData
     },
     headers: { "User-Agent": "insomnia/9.1.1" },
   };
