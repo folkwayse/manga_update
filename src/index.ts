@@ -1,6 +1,8 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import dotenv from 'dotenv';
+import { cors } from 'hono/cors'
+
 
 //import router
 import  kiryu  from './router/kiryu';
@@ -10,7 +12,7 @@ import {  updateStatus } from './fakomik/api';
 dotenv.config();
 
 const app = new Hono()
-
+app.use('*', cors())
 app.get('/', async (c) => {
 
   const updateData = await getUpdates();
