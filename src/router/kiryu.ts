@@ -1,7 +1,15 @@
 import { Hono } from "hono";
-import { getUpdates, getChapters, getChapterContents } from "../kiryu/api";
+import { getManga, getChapters, getChapterContents } from "../kiryu/api";
 
 const kiryu = new Hono();
+
+
+kiryu.get("/manga/:slug", async (c) => {
+    const slug = c.req.param("slug");
+    const chapters = await getManga(slug);
+    return c.json(chapters);
+  });
+
 
 kiryu.get("/chapters/:slug", async (c) => {
   const slug = c.req.param("slug");

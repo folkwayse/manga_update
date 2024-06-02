@@ -19,12 +19,11 @@ export const getMangaBySlug = async (slug: string) => {
 };
 
 export const updateStatus = async (updateData: any[]) => {
-  
   const options = {
     method: "POST",
-    url: process.env.API_URL + "mangas/hasupdate" ,
+    url: process.env.API_URL + "mangas/hasupdate",
     data: {
-      updateData
+      updateData,
     },
     headers: { "User-Agent": "insomnia/9.1.1" },
   };
@@ -37,4 +36,29 @@ export const updateStatus = async (updateData: any[]) => {
       return console.error(error);
     });
   return data;
+};
+
+export const reupload = async (imgurl: string) => {
+  const options = {
+    method: "POST",
+    url: process.env.API_URL + "images/uploadfromurl",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "insomnia/9.1.1",
+    },
+    data: {
+      url: imgurl,
+    },
+  };
+
+  const response = await axios
+    .request(options)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+
+  return response;
 };

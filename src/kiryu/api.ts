@@ -96,7 +96,7 @@ export const getChapters = async (slug: string) => {
       return response.data;
     })
     .catch(function (error) {
-      console.error('error');
+      console.error("error");
     });
   const dom = new JSDOM(data);
   const document = dom.window.document;
@@ -118,6 +118,66 @@ export const getChapters = async (slug: string) => {
     chapters.push({ slug, chapterNumber });
   });
   return chapters;
+};
+export const getManga = async (slug: string) => {
+  // const options = {
+  //   method: "GET",
+  //   url: "http://45.76.148.33:8080/api/kiryuu/v6/manga?id=" + slug,
+  //   params: { "": "" },
+  //   headers: {
+  //     "User-Agent": "user-agent: Dart/2.8 (dart:io)",
+  //     "Accept-Encoding": "gzip",
+  //     "Content-Type": "application/json",
+  //   },
+  // };
+  const options = {
+    method: "GET",
+    url: "https://kiryuu.id/manga/" + slug + "/",
+    params: { "": "" },
+    headers: {
+      "User-Agent": "insomnia/9.2.0",
+      "Accept-Encoding": "gzip",
+    },
+  };
+
+  const data = await axios
+    .request(options)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.error("error");
+    });
+  const dom = new JSDOM(data);
+  const document = dom.window.document;
+  const title = document.querySelector(".entry-title")?.textContent?.replace(" Bahasa Indonesia", "").trim() || "";
+  const altTitle =
+    document.querySelector(".seriestualt")?.textContent.trim() || "";
+  const poster = document.querySelector(".thumb > img")?.src;
+  const synopsis= document.querySelector(".entry-content-single")?.textContent.trim() ?? "";
+  const rows = document.querySelectorAll("table.infotable tbody tr");
+  const info = {};
+
+  // Memproses setiap baris dan menambahkannya ke objek hasil
+  rows.forEach((row:any) => {
+    const cells = row.querySelectorAll("td");
+    if (cells.length === 2) {
+      const key = cells[0].textContent
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "_");
+      const value = cells[1].textContent.trim();
+      info[key]= value;
+    }
+  });
+
+  return {
+    title,
+    altTitle,
+    poster,
+    synopsis,
+    info
+  };
 };
 
 export const getChapterContents = async (slug: string) => {
