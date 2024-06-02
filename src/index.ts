@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import dotenv from 'dotenv';
 
-import { getUpdates, getChapters } from './kiryu/api';
+import { getUpdates, getChapters, getChapterContents } from './kiryu/api';
 import { getMangaBySlug , updateStatus } from './fakomik/api';
 dotenv.config();
 
@@ -22,8 +22,9 @@ app.get('/', async (c) => {
   return c.json(mang);
 })
 
+
 app.get('/kiryu', async (c) => {
-  const chapters = await getChapters('legendary-blacksmiths-vengeance');
+  const chapters = await getUpdates();
   return c.json(chapters);
 })
 
