@@ -96,7 +96,7 @@ export const getChapters = async (slug: string) => {
       return response.data;
     })
     .catch(function (error) {
-      console.error(error);
+      console.error('error');
     });
   const dom = new JSDOM(data);
   const document = dom.window.document;
@@ -154,7 +154,7 @@ export const getChapterContents = async (slug: string) => {
   });
 
   // Log the array of image URLs
-  console.log(title, imageUrls);
+  // console.log(title, imageUrls);
   return {
     title,
     imageUrls,
