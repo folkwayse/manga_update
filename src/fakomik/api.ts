@@ -62,3 +62,25 @@ export const reupload = async (imgurl: string) => {
 
   return response;
 };
+
+export const checkSlugByTitle = async (title: string) => {
+  const options = {
+    method: "POST",
+    url: process.env.API_URL + "chapters/checkslug",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": "insomnia/9.2.0",
+    },
+    data: { title: title },
+  };
+
+  const response = await axios
+    .request(options)
+    .then(function (response) {
+      return response.data;
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+  return response;
+};
