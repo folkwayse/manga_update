@@ -150,16 +150,31 @@ export const getManga = async (slug: string) => {
     });
   const dom = new JSDOM(data);
   const document = dom.window.document;
-  const title = document.querySelector(".entry-title")?.textContent?.replace(" Bahasa Indonesia", "").trim() || "";
+  const title =
+    document
+      .querySelector(".entry-title")
+      ?.textContent?.replace(" Bahasa Indonesia", "")
+      .trim() || "";
   const altTitle =
     document.querySelector(".seriestualt")?.textContent.trim() || "";
   const poster = document.querySelector(".thumb > img")?.src;
-  const synopsis= document.querySelector(".entry-content-single")?.textContent.trim() ?? "";
+  const synopsis =
+    document.querySelector(".entry-content-single")?.textContent.trim() ?? "";
   const rows = document.querySelectorAll("table.infotable tbody tr");
+  const rating: number = parseFloat(
+    document.querySelector(".num")?.textContent.trim() || "0"
+  );
+  // genres
+  const genres: string[] = [];
+  const genresSelector = document.querySelectorAll(".seriestugenre > a");
+  for (let i = 0; i < genresSelector.length; i++) {
+    genres.push(genresSelector[i].textContent.trim());
+  }
+  
   const info = {};
 
   // Memproses setiap baris dan menambahkannya ke objek hasil
-  rows.forEach((row:any) => {
+  rows.forEach((row: any) => {
     const cells = row.querySelectorAll("td");
     if (cells.length === 2) {
       const key = cells[0].textContent
@@ -167,7 +182,7 @@ export const getManga = async (slug: string) => {
         .toLowerCase()
         .replace(/\s+/g, "_");
       const value = cells[1].textContent.trim();
-      info[key]= value;
+      info[key] = value;
     }
   });
 
@@ -176,7 +191,9 @@ export const getManga = async (slug: string) => {
     altTitle,
     poster,
     synopsis,
-    info
+    rating,
+    genres,
+    ...info,
   };
 };
 
