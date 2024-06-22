@@ -21,6 +21,12 @@ export const checkStatus = async () => {
     // get last chapters of manga
     const chapters = manga.chapter;
     const lastChapter = chapters[0];
+
+    if (!lastChapter) {
+      console.log(chapters.name + "chapter belum ada isinya");
+      await addFirstChapter(manga.id, slug);
+    }
+
     if (chapterNumber == lastChapter.chapter_number) {
       //   console.log(slug + " : chapter already up to date");
     } else {
@@ -133,6 +139,55 @@ const updateChapters = async (
         }
       );
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addFirstChapter = async (mangaId: string, slug: string) => {
+  try {
+    const chapters = (await getChapters(slug)).reverse();
+    const chapter = chapters[0];
+    const contents_sumber = await getChapterContents(chapter.slug);
+
+    const name = contents_sumber.title;
+    //check slug befor reupload the images
+    // const isSlugExists = await checkSlugByTitle(name);
+
+    // reupload images using promisess all
+
+    const reuploadPromises = contents_sumber.imageUrls.map((image) =>
+      retryGetImageFromUrl(image)
+    );
+
+    // Tunggu semua promises selesai dan dapatkan URL gambar baru
+    const newImageUrls = await Promise.all(reuploadPromises);
+
+    // Tambahkan URL gambar baru ke dalam konten
+    const content = [];
+    content.push(...newImageUrls);
+
+    const chapter_number = chapter.chapterNumber;
+
+    //   const newChapter = {
+    //     name: name,
+    //     chapter_number: chapter_number,
+    //     content: content,
+    //   };
+    // console.log({
+    //   name: name,
+    //   chapter_number: chapter_number,
+    //   content: content,
+    // });
+    // return;
+    const response = await axios.post(
+      `${process.env.API_URL}mangas/${mangaId}/newchapter`,
+      {
+        name: name,
+        chapter_number: chapter_number,
+        content: content,
+      }
+    );
   } catch (error) {
     console.log(error);
   }
