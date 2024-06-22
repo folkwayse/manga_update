@@ -25,6 +25,7 @@ export const checkStatus = async () => {
     if (!lastChapter) {
       console.log(chapters.name + "chapter belum ada isinya");
       await addFirstChapter(manga.id, slug);
+      continue;
     }
 
     if (chapterNumber == lastChapter.chapter_number) {
