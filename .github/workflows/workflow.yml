@@ -1,0 +1,37 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches:
+      - main  # Atau sesuaikan dengan branch yang Anda gunakan
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20.x'  # Sesuaikan dengan versi Node.js yang Anda gunakan
+
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.DEPLOY_SERVER }}
+        username: ${{ secrets.DEPLOY_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: 22
+        script: |
+          cd fakomik_updater/
+          git reset --hard
+          git pull origin main
+          git status
+          yarn install --ignore-engines
+          pm2 restart apifakomik
+          
+          
