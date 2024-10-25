@@ -32,6 +32,6 @@ jobs:
           git pull origin main
           git status
           yarn install --ignore-engines
-          pm2 restart apifakomik
+          pm2 restart fakomik_updater
           
           
