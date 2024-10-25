@@ -117,24 +117,26 @@ const updateChapters = async (
 
       // reupload images using promisess all
 
-      // const newImageUrls: string[] = [];
-      // for (const image of contents_sumber.imageUrls) {
-      //   const newImageUrl = await retryGetImageFromUrl(image);
-      //   if (newImageUrl) newImageUrls.push(newImageUrl);
-      // }
+      const newImageUrls: string[] = [];
+      for (const image of contents_sumber.imageUrls) {
+        const newImageUrl = await retryGetImageFromUrl(image);
+
+        if (newImageUrl) newImageUrls.push(newImageUrl);
+        console.log(newImageUrl);
+      }
       // Tunggu semua promises selesai dan dapatkan URL gambar baru
 
-      const reuploadPromises = contents_sumber.imageUrls.map((image) =>
-        retryGetImageFromUrl(image)
-      );
-      const newImageUrls = await Promise.all(reuploadPromises);
+      // const reuploadPromises = contents_sumber.imageUrls.map((image) =>
+      //   retryGetImageFromUrl(image)
+      // );
+      // const newImageUrls = await Promise.all(reuploadPromises);
 
       // Tambahkan URL gambar baru ke dalam konten
       const content = [];
       content.push(...newImageUrls);
 
       const chapter_number = chapter.chapterNumber;
-
+      console.log(chapter_number);
       //   const newChapter = {
       //     name: name,
       //     chapter_number: chapter_number,
