@@ -16,9 +16,13 @@ app.use("*", (c, next) => {
   console.log(`[${new Date().toLocaleString()}] ${c.req.method} ${c.req.url}`);
   return next();
 });
+// app.get("/", async (c) => {
+//   const result = await checkStatus();
+//   return c.json(result);
+// });
 app.get("/", async (c) => {
-  const result = await checkStatus();
-  return c.json(result);
+  checkStatus();
+  return c.json("OK");
 });
 
 app.route("/kiryuu", kiryu);
