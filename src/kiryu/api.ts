@@ -56,9 +56,7 @@ export const getUpdates = async () => {
     //add href and chapters number
     const bsx = listupdElement.querySelectorAll(".bsx");
     for (const bsxElement of bsx) {
-      const href = bsxElement.querySelector(
-        'a[href*="manga/"]'
-      )?.href;
+      const href = bsxElement.querySelector('a[href*="manga/"]')?.href;
       const chapters = bsxElement.querySelector(".epxs")?.textContent;
       const slug = href?.split("/")[href?.split("/").length - 2];
       const chapter_number = parseFloat(chapters.replace("Chapter", ""));
