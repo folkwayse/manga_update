@@ -5,11 +5,13 @@ import { getChapterContents, getChapters, getUpdates } from "./kiryu/api";
 export const checkStatus = async () => {
   // check update
   const updateData = await getUpdates();
-  // console.log(updateData)
+
+  console.log(updateData);
   //check slug dan chapternumber di db
   for (let i = 0; i < updateData.length; i++) {
     const slug = updateData[i].slug;
-    // console.log(slug);
+
+    console.log(slug);
 
     const chapterNumber = updateData[i].chapter_number;
     const manga = await getMangaBySlug(slug);
@@ -19,11 +21,13 @@ export const checkStatus = async () => {
       continue;
     }
     // get last chapters of manga
+    console.log(manga);
     const chapters = manga.chapter;
     const lastChapter = chapters[0];
 
     if (!lastChapter) {
-      console.log(chapters.name + "chapter belum ada isinya");
+      console.log(manga.title + "chapter belum ada isinya");
+      console.log(slug);
       await addFirstChapter(manga.id, slug);
       continue;
     }
@@ -113,12 +117,17 @@ const updateChapters = async (
 
       // reupload images using promisess all
 
-      const reuploadPromises = contents_sumber.imageUrls.map((image) =>
-        retryGetImageFromUrl(image)
-      );
-
+      const newImageUrls: string[] = [];
+      for (const image of contents_sumber.imageUrls) {
+        const newImageUrl = await retryGetImageFromUrl(image);
+        if (newImageUrl) newImageUrls.push(newImageUrl);
+      }
       // Tunggu semua promises selesai dan dapatkan URL gambar baru
-      const newImageUrls = await Promise.all(reuploadPromises);
+
+      // const reuploadPromises = contents_sumber.imageUrls.map((image) =>
+      //   retryGetImageFromUrl(image)
+      // );
+      // const newImageUrls = await Promise.all(reuploadPromises);
 
       // Tambahkan URL gambar baru ke dalam konten
       const content = [];
@@ -147,7 +156,11 @@ const updateChapters = async (
 
 const addFirstChapter = async (mangaId: string, slug: string) => {
   try {
+    const _chaps = await getChapters(slug);
+    console.log(_chaps);
+
     const chapters = (await getChapters(slug)).reverse();
+
     const chapter = chapters[0];
     const contents_sumber = await getChapterContents(chapter.slug);
 
@@ -170,17 +183,6 @@ const addFirstChapter = async (mangaId: string, slug: string) => {
 
     const chapter_number = chapter.chapterNumber;
 
-    //   const newChapter = {
-    //     name: name,
-    //     chapter_number: chapter_number,
-    //     content: content,
-    //   };
-    // console.log({
-    //   name: name,
-    //   chapter_number: chapter_number,
-    //   content: content,
-    // });
-    // return;
     const response = await axios.post(
       `${process.env.API_URL}mangas/${mangaId}/newchapter`,
       {

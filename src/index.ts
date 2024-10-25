@@ -10,7 +10,12 @@ import { checkStatus } from "./main";
 dotenv.config();
 
 const app = new Hono();
+
 app.use("*", cors());
+app.use("*", (c, next) => {
+  console.log(`[${new Date().toLocaleString()}] ${c.req.method} ${c.req.url}`);
+  return next();
+});
 app.get("/", async (c) => {
   const result = await checkStatus();
   return c.json(result);
