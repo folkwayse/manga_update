@@ -66,9 +66,10 @@ const getImageFromUrl = async (url: string): Promise<string | null> => {
         },
       }
     );
+    console.log(response.data.imageurl)
     return response.data.imageurl;
   } catch (error) {
-    console.error("Error uploading image:", error);
+    // console.error("Error uploading image:", error);
     return null;
   }
 };
