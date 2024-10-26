@@ -82,7 +82,7 @@ const retryGetImageFromUrl = async (image: string) => {
       // Tunggu selama 5 detik
       await new Promise((resolve) => setTimeout(resolve, 5000));
       retryCount++;
-      if (retryCount > 3) {
+      if (retryCount > 10) {
         console.log("Gagal mendapatkan gambar dari URL: " + image);
         return false;
       }
@@ -152,7 +152,7 @@ const updateChapters = async (
       );
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 
@@ -194,6 +194,6 @@ const addFirstChapter = async (mangaId: string, slug: string) => {
       }
     );
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
